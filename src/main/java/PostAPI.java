@@ -1,27 +1,28 @@
-import io.restassured.RestAssured;
-import static io.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.*;
 import org.json.JSONObject;
 
-public class PatchAPI {
+import io.restassured.RestAssured;
 
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+
+public class PostAPI {
     public static void main(String[] args) {
-
-        // Set the base URI
         RestAssured.baseURI = "https://jsonplaceholder.typicode.com";
 
-        // Create the JSON payload for patch
         JSONObject jobj = new JSONObject();
-        jobj.put("title", "patched title");
+        jobj.put("title", "foo");
+        jobj.put("body", "bar");
+        jobj.put("userId", 1);
 
-        // Perform PATCH request using BDD syntax
         given()
             .contentType("application/json")
             .body(jobj.toString())
         .when()
-            .patch("/posts/1")
+            .post("/posts")
         .then()
-            .statusCode(200)
-            .body("title", equalTo("patched title"));
+            .statusCode(201)
+            .body("title", equalTo("foo"))
+            .body("body", equalTo("bar"))
+            .body("userId", equalTo(1));
     }
 }
